@@ -6,6 +6,7 @@ import com.javaelementary.paint.Board;
 import com.javaelementary.paint.Direction;
 import com.javaelementary.paint.DisplayDriver;
 import com.javaelementary.platform.DisplayDriverImpl;
+import com.javaelementary.save.BoardSave;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -13,6 +14,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.*;
@@ -97,11 +99,11 @@ public class Main extends Application {
             case F7:
                 board.cloneShape();
                 break;
-            case DIGIT8:
-                save(board);
+            case F8:
+                save();
                 break;
-            case DIGIT9:
-                board.createBoard(create());
+            case F9:
+                download();
                 break;
             case ESCAPE:
                 board.clear();
@@ -109,6 +111,7 @@ public class Main extends Application {
         }
         board.drawShape();
     }
+
     private void mouseClick(MouseEvent mouseEvent) {
         board.setX(mouseEvent.getX());
         board.setY(mouseEvent.getY());
@@ -119,32 +122,29 @@ public class Main extends Application {
         gc.clearRect(0, 0, Const.BOARD_WIDTH, Const.BOARD_HEIGHT);
         gc.setFill(Const.BOARD_COLOR);
         gc.fillRect(0, 0, Const.BOARD_WIDTH, Const.BOARD_HEIGHT);
+        gc.setFill(Color.LIME);
+        gc.fillText("create: 1-4; active: mouse click; fill: F1; inc: F2; dec: F3; combine: F4->F5; delete: F6; clone: F7; save F8; download: F9; clear: esc", 2, 15);
     }
 
-    private void save(Board board) {
+    private void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("Save.txt"))) {
-            Gson gson = new GsonBuilder()
-                    .excludeFieldsWithoutExposeAnnotation()
-                    //.setPrettyPrinting()
-                    .serializeNulls()
-                    .create();
-            writer.write(gson.toJson(board));
+            Gson gson = new GsonBuilder().create();
+            writer.write(gson.toJson(board.makeBoardSave()));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private Board create() {
+    private void download() {
         try (BufferedReader br = new BufferedReader(new FileReader("Save.txt"))) {
-            String saveFrom;
-            while ((saveFrom = br.readLine()) != null) {
-                System.out.println(saveFrom);
-                Gson gson = new Gson();
-                return gson.fromJson(saveFrom, Board.class);
+            String download;
+            while ((download = br.readLine()) != null) {
+                Gson gson = new GsonBuilder().create();
+                BoardSave boardSave = gson.fromJson(download, BoardSave.class);
+                board.downloadBoardSave(boardSave);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
     }
 }

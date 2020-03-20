@@ -1,22 +1,17 @@
 package com.javaelementary.paint.shape;
 
-import com.google.gson.annotations.Expose;
 import com.javaelementary.Const;
 import com.javaelementary.paint.*;
 
 import java.util.Random;
 
 public abstract class BaseShape implements Shape {
-    @Expose
     protected double x;
-    @Expose
     protected double y;
     protected double size = Const.SHAPE_SIZE;
     protected DisplayDriver displayDriver;
     protected Board board;
-    @Expose
     protected MyColor color;
-    @Expose
     protected boolean fill;
 
     public BaseShape(double x, double y, DisplayDriver displayDriver, Board board) {
@@ -27,6 +22,21 @@ public abstract class BaseShape implements Shape {
         Random random = new Random();
         color = MyColor.values()[random.nextInt(MyColor.values().length)];
         this.fill = false;
+    }
+
+    @Override
+    public boolean getFill() {
+        return this.fill;
+    }
+
+    @Override
+    public void setColor(MyColor color) {
+        this.color = color;
+    }
+
+    @Override
+    public MyColor getColor() {
+        return this.color;
     }
 
     @Override

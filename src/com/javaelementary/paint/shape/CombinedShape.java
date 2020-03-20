@@ -1,20 +1,24 @@
 package com.javaelementary.paint.shape;
 
-import com.google.gson.annotations.Expose;
 import com.javaelementary.Const;
 import com.javaelementary.paint.Direction;
+import com.javaelementary.paint.MyColor;
 import com.javaelementary.paint.Shape;
+import com.javaelementary.paint.ShapeType;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CombineShape implements Serializable {
-    @Expose
+public class CombinedShape implements Shape{
+    ShapeType shapeType = ShapeType.COMBINED;
     private List<Shape> groupShapes;
 
-    public CombineShape(List<Shape> groupShapes) {
+    public CombinedShape(List<Shape> groupShapes) {
         this.groupShapes = new ArrayList<>(groupShapes);
+    }
+
+    public List<Shape> getGroupShapes() {
+        return groupShapes;
     }
 
     public boolean isActive(double x, double y) {
@@ -26,14 +30,53 @@ public class CombineShape implements Serializable {
         return false;
     }
 
-    public void draw() {
+    @Override
+    public boolean isFill() {
+        return false;
+    }
+
+    @Override
+    public void setFill(boolean fill) {
+    }
+
+    @Override
+    public boolean getFill() {
+        return false;
+    }
+
+    @Override
+    public void setColor(MyColor color) {
+    }
+
+    @Override
+    public MyColor getColor() {
+        return null;
+    }
+
+    @Override
+    public Shape clone() {
+        return null;
+    }
+
+    public void drawCombined() {
         for (Shape shape : groupShapes) {
             if (shape.isFill()) {
                 shape.drawFill();
             } else {
                 shape.drawStroke();
             }
+            if (shape instanceof CombinedShape){
+                ((CombinedShape) shape).drawCombined();
+            }
         }
+    }
+
+    @Override
+    public void drawStroke() {
+    }
+
+    @Override
+    public void drawFill() {
     }
 
     public void drawActive() {
@@ -66,11 +109,21 @@ public class CombineShape implements Serializable {
         }
     }
 
-    public CombineShape cloneCombineShape() {
+    @Override
+    public double getX() {
+        return 0;
+    }
+
+    @Override
+    public double getY() {
+        return 0;
+    }
+
+    public CombinedShape cloneCombinedShape() {
         List<Shape> cloneShapes = new ArrayList<>();
         for (Shape shape : groupShapes) {
             cloneShapes.add(shape.clone());
         }
-        return new CombineShape(cloneShapes);
+        return new CombinedShape(cloneShapes);
     }
 }

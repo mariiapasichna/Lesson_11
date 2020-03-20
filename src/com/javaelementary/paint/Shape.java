@@ -23,5 +23,11 @@ public interface Shape extends Cloneable {
 
     void setFill(boolean fill);
 
+    boolean getFill();
+
+    void setColor(MyColor color);
+
+    MyColor getColor();
+
     Shape clone();
 }

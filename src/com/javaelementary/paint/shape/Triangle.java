@@ -3,10 +3,10 @@ package com.javaelementary.paint.shape;
 import com.javaelementary.paint.Board;
 import com.javaelementary.paint.DisplayDriver;
 import com.javaelementary.paint.Shape;
+import com.javaelementary.paint.ShapeType;
 
-import java.io.Serializable;
-
-public class Triangle extends BaseShape implements Shape, Serializable {
+public class Triangle extends BaseShape implements Shape {
+    ShapeType shapeType = ShapeType.TRIANGLE;
     public Triangle(double x, double y, DisplayDriver displayDriver, Board board) {
         super(x, y, displayDriver, board);
     }

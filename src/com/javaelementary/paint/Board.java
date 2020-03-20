@@ -1,26 +1,17 @@
 package com.javaelementary.paint;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 import com.javaelementary.paint.shape.*;
-
-import java.io.Serializable;
+import com.javaelementary.save.BoardSave;
+import com.javaelementary.save.ShapeSave;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Board implements Serializable {
-    @Expose
+public class Board {
     private double x;
-    @Expose
     private double y;
-
     private final DisplayDriver displayDriver;
-    @Expose
     private List<Shape> shapes = new ArrayList<>();
-    @Expose
     private List<Shape> groupShapes = new ArrayList<>();
-    @Expose
-    private List<CombineShape> combineShapes = new ArrayList<>();
 
     public Board(DisplayDriver displayDriver) {
         this.x = 0;
@@ -28,12 +19,27 @@ public class Board implements Serializable {
         this.displayDriver = displayDriver;
     }
 
-    public void createBoard (Board board) {
-        x = board.x;
-        y = board.y;
-        shapes = board.shapes;
-        groupShapes = board.groupShapes;
-        combineShapes = board.combineShapes;
+    public BoardSave makeBoardSave() {
+        List<ShapeSave> saveShapes = new ArrayList<>();
+        for (Shape shape : shapes) {
+            ShapeSave shapeSave = ShapeSave.createShapeSave(shape);
+            saveShapes.add(shapeSave);
+        }
+        return new BoardSave(x, y, saveShapes);
+    }
+
+    public void downloadBoardSave(BoardSave boardSave) {
+        shapes.clear();
+        List<ShapeSave> saveShapes = boardSave.getShapes();
+        x = boardSave.getX();
+        y = boardSave.getY();
+        for (ShapeSave shapeSave : saveShapes) {
+            Shape shape = ShapeSave.createShape(shapeSave, this, displayDriver);
+            shape.setColor(shapeSave.getColor());
+            shape.setFill(shapeSave.isFill());
+            shapes.add(shape);
+        }
+        drawShape();
     }
 
     public void setX(double x) {
@@ -67,9 +73,17 @@ public class Board implements Serializable {
             } else {
                 shape.drawStroke();
             }
-            if (shape.isActive(x, y)) {
-                shape.drawActive();
+            if (shape instanceof CombinedShape) {
+                ((CombinedShape) shape).drawCombined();
             }
+            if (shape.isActive(x, y)) {
+                if (shape instanceof CombinedShape) {
+                    ((CombinedShape) shape).drawActive();
+                } else {
+                    shape.drawActive();
+                }
+            }
+
         }
         for (Shape shape : groupShapes) {
             if (shape.isFill()) {
@@ -77,14 +91,15 @@ public class Board implements Serializable {
             } else {
                 shape.drawStroke();
             }
-            if (shape.isActive(x, y)) {
-                shape.drawActive();
+            if (shape instanceof CombinedShape) {
+                ((CombinedShape) shape).drawCombined();
             }
-        }
-        for (CombineShape combineShape : combineShapes) {
-            combineShape.draw();
-            if (combineShape.isActive(x, y)) {
-                combineShape.drawActive();
+            if (shape.isActive(x, y)) {
+                if (shape instanceof CombinedShape) {
+                    ((CombinedShape) shape).drawActive();
+                } else {
+                    shape.drawActive();
+                }
             }
         }
     }
@@ -93,12 +108,6 @@ public class Board implements Serializable {
         for (Shape shape : shapes) {
             if (shape.isActive(x, y)) {
                 shape.move(direction);
-                break;
-            }
-        }
-        for (CombineShape combineShape : combineShapes) {
-            if (combineShape.isActive(x, y)) {
-                combineShape.move(direction);
                 break;
             }
         }
@@ -111,24 +120,12 @@ public class Board implements Serializable {
                 break;
             }
         }
-        for (CombineShape combineShape : combineShapes) {
-            if (combineShape.isActive(x, y)) {
-                combineShape.fill();
-                break;
-            }
-        }
     }
 
     public void grow() {
         for (Shape shape : shapes) {
             if (shape.isActive(x, y)) {
                 shape.grow();
-                break;
-            }
-        }
-        for (CombineShape combineShape : combineShapes) {
-            if (combineShape.isActive(x, y)) {
-                combineShape.grow();
                 break;
             }
         }
@@ -141,24 +138,12 @@ public class Board implements Serializable {
                 break;
             }
         }
-        for (CombineShape combineShape : combineShapes) {
-            if (combineShape.isActive(x, y)) {
-                combineShape.shrink();
-                break;
-            }
-        }
     }
 
     public void delete() {
         for (int i = 0; i < shapes.size(); i++) {
             if (shapes.get(i).isActive(x, y)) {
                 shapes.remove(i);
-                break;
-            }
-        }
-        for (CombineShape combineShape : combineShapes) {
-            if (combineShape.isActive(x, y)) {
-                combineShapes.remove(combineShape);
                 break;
             }
         }
@@ -175,7 +160,7 @@ public class Board implements Serializable {
     }
 
     public void combineShapes() {
-        combineShapes.add(new CombineShape(groupShapes));
+        shapes.add(new CombinedShape(groupShapes));
         groupShapes.clear();
     }
 
@@ -186,24 +171,16 @@ public class Board implements Serializable {
                 break;
             }
         }
-        for (CombineShape combineShape : combineShapes) {
-            if (combineShape.isActive(x, y)) {
-                combineShape.drawActive();
-                break;
-            }
-        }
     }
 
     public void cloneShape() {
         for (Shape shape : shapes) {
             if (shape.isActive(x, y)) {
-                shapes.add(shape.clone());
-                break;
-            }
-        }
-        for (CombineShape combineShape : combineShapes) {
-            if (combineShape.isActive(x, y)) {
-                combineShapes.add(combineShape.cloneCombineShape());
+                if (shape instanceof CombinedShape) {
+                    shapes.add(((CombinedShape) shape).cloneCombinedShape());
+                } else {
+                    shapes.add(shape.clone());
+                }
                 break;
             }
         }
@@ -212,6 +189,5 @@ public class Board implements Serializable {
     public void clear() {
         shapes.clear();
         groupShapes.clear();
-        combineShapes.clear();
     }
 }
