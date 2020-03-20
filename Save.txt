@@ -1,0 +1,20 @@
+{
+  "x": 59.0,
+  "y": 126.0,
+  "shapes": [
+    {
+      "x": 10.0,
+      "y": 80.0,
+      "color": "PURPLE",
+      "fill": true
+    },
+    {
+      "x": 10.0,
+      "y": 10.0,
+      "color": "ORANGE",
+      "fill": false
+    }
+  ],
+  "groupShapes": [],
+  "combineShapes": []
+}
