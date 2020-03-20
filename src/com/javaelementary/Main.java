@@ -125,7 +125,7 @@ public class Main extends Application {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("Save.txt"))) {
             Gson gson = new GsonBuilder()
                     .excludeFieldsWithoutExposeAnnotation()
-                    .setPrettyPrinting()
+                    //.setPrettyPrinting()
                     .serializeNulls()
                     .create();
             writer.write(gson.toJson(board));
@@ -135,15 +135,16 @@ public class Main extends Application {
     }
 
     private Board create() {
-        String saveFrom = null;
         try (BufferedReader br = new BufferedReader(new FileReader("Save.txt"))) {
+            String saveFrom;
             while ((saveFrom = br.readLine()) != null) {
                 System.out.println(saveFrom);
+                Gson gson = new Gson();
+                return gson.fromJson(saveFrom, Board.class);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Gson gson = new Gson();
-        return gson.fromJson(saveFrom, Board.class);
+        return null;
     }
 }
