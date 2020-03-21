@@ -124,6 +124,7 @@ public class Main extends Application {
         gc.fillRect(0, 0, Const.BOARD_WIDTH, Const.BOARD_HEIGHT);
         gc.setFill(Color.LIME);
         gc.fillText("create: 1-4; active: mouse click; fill: F1; inc: F2; dec: F3; combine: F4->F5; delete: F6; clone: F7; save F8; download: F9; clear: esc", 2, 15);
+        gc.fillText("move: UP, DOWN, LEFT, RIGHT", 600, 30);
     }
 
     private void save() {
