@@ -84,7 +84,17 @@ public abstract class BaseShape implements Shape {
 
     @Override
     public void grow() {
-        this.size += 5;
+        if (x + size >= Const.BOARD_WIDTH) {
+            x -= 5;
+        } else if (y + size >= Const.BOARD_HEIGHT) {
+            y -= 5;
+        } else if (x <= 0) {
+            x += 5;
+        } else if (y <= 0) {
+            y += 5;
+        } else {
+            this.size += 5;
+        }
     }
 
     @Override
