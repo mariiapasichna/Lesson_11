@@ -8,7 +8,7 @@ import java.util.Random;
 public abstract class BaseShape implements Shape {
     protected double x;
     protected double y;
-    protected double size = Const.SHAPE_SIZE;
+    protected double size;
     protected DisplayDriver displayDriver;
     protected Board board;
     protected MyColor color;
@@ -17,6 +17,7 @@ public abstract class BaseShape implements Shape {
     public BaseShape(double x, double y, DisplayDriver displayDriver, Board board) {
         this.x = x;
         this.y = y;
+        this.size = Const.SHAPE_SIZE;
         this.displayDriver = displayDriver;
         this.board = board;
         Random random = new Random();
@@ -25,8 +26,27 @@ public abstract class BaseShape implements Shape {
     }
 
     @Override
+    public void setSize(double size) {
+        this.size = size;
+    }
+
+    public double getSize() {
+        return size;
+    }
+
+    @Override
+    public void setFill(boolean fill) {
+        this.fill = fill;
+    }
+
+    @Override
     public boolean getFill() {
         return this.fill;
+    }
+
+    @Override
+    public boolean isFill() {
+        return fill;
     }
 
     @Override
@@ -50,16 +70,6 @@ public abstract class BaseShape implements Shape {
     }
 
     @Override
-    public void setFill(boolean fill) {
-        this.fill = fill;
-    }
-
-    @Override
-    public boolean isFill() {
-        return fill;
-    }
-
-    @Override
     public boolean isActive(double x, double y) {
         if (x >= this.x && x <= this.x + size && y >= this.y && y <= this.y + size) {
             return true;
@@ -79,9 +89,9 @@ public abstract class BaseShape implements Shape {
 
     @Override
     public void move(Direction direction) {
-        if (x + Const.SHAPE_SIZE >= Const.BOARD_WIDTH - 5) {
+        if (x + size >= Const.BOARD_WIDTH - 5) {
             x -= 1;
-        } else if (y + Const.SHAPE_SIZE >= Const.BOARD_HEIGHT - 5) {
+        } else if (y + size >= Const.BOARD_HEIGHT - 5) {
             y -= 1;
         } else if (x <= 5) {
             x += 1;
@@ -90,12 +100,16 @@ public abstract class BaseShape implements Shape {
         } else {
             if (direction == Direction.RIGHT) {
                 x += 5;
+                board.setX(this.x);
             } else if (direction == Direction.LEFT) {
                 x -= 5;
+                board.setX(this.x);
             } else if (direction == Direction.UP) {
                 y -= 5;
+                board.setY(this.y);
             } else if (direction == Direction.DOWN) {
                 y += 5;
+                board.setY(this.y);
             }
         }
     }

@@ -9,13 +9,17 @@ import java.util.List;
 public class ShapeSave {
     private double x;
     private double y;
+    private double size;
     private MyColor color;
     private ShapeType shapeType;
     private boolean fill;
     private List<ShapeSave> list;
-
     public boolean isFill() {
         return fill;
+    }
+
+    public double getSize() {
+        return size;
     }
 
     public double getX() {
@@ -44,6 +48,7 @@ public class ShapeSave {
             BaseShape baseShape = (BaseShape) shape;
             result.x = baseShape.getX();
             result.y = baseShape.getY();
+            result.size = baseShape.getSize();
             result.color = baseShape.getColor();
             result.fill = baseShape.getFill();
         }
@@ -91,6 +96,7 @@ public class ShapeSave {
                 for (int i = 0; i < shapeSave.getList().size(); i++) {
                     combinedShapes.get(i).setColor(shapeSave.getList().get(i).getColor());
                     combinedShapes.get(i).setFill(shapeSave.getList().get(i).isFill());
+                    combinedShapes.get(i).setSize(shapeSave.getList().get(i).getSize());
                 }
                 return new CombinedShape(combinedShapes);
             default:

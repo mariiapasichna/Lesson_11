@@ -3,6 +3,7 @@ package com.javaelementary.paint;
 import com.javaelementary.paint.shape.*;
 import com.javaelementary.save.BoardSave;
 import com.javaelementary.save.ShapeSave;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,7 @@ public class Board {
     private double x;
     private double y;
     private final DisplayDriver displayDriver;
-    private List<Shape> shapes = new ArrayList<>();
+    public List<Shape> shapes = new ArrayList<>();
     private List<Shape> groupShapes = new ArrayList<>();
 
     public Board(DisplayDriver displayDriver) {
@@ -37,6 +38,7 @@ public class Board {
             Shape shape = ShapeSave.createShape(shapeSave, this, displayDriver);
             shape.setColor(shapeSave.getColor());
             shape.setFill(shapeSave.isFill());
+            shape.setSize(shapeSave.getSize());
             shapes.add(shape);
         }
         drawShape();
@@ -73,17 +75,9 @@ public class Board {
             } else {
                 shape.drawStroke();
             }
-            if (shape instanceof CombinedShape) {
-                ((CombinedShape) shape).drawCombined();
-            }
             if (shape.isActive(x, y)) {
-                if (shape instanceof CombinedShape) {
-                    ((CombinedShape) shape).drawActive();
-                } else {
-                    shape.drawActive();
-                }
+                shape.drawActive();
             }
-
         }
         for (Shape shape : groupShapes) {
             if (shape.isFill()) {
@@ -91,15 +85,8 @@ public class Board {
             } else {
                 shape.drawStroke();
             }
-            if (shape instanceof CombinedShape) {
-                ((CombinedShape) shape).drawCombined();
-            }
             if (shape.isActive(x, y)) {
-                if (shape instanceof CombinedShape) {
-                    ((CombinedShape) shape).drawActive();
-                } else {
-                    shape.drawActive();
-                }
+                shape.drawActive();
             }
         }
     }
@@ -141,19 +128,19 @@ public class Board {
     }
 
     public void delete() {
-        for (int i = 0; i < shapes.size(); i++) {
-            if (shapes.get(i).isActive(x, y)) {
-                shapes.remove(i);
+        for (Shape shape : shapes) {
+            if (shape.isActive(x, y)) {
+                shapes.remove(shape);
                 break;
             }
         }
     }
 
     public void combineShapesToList() {
-        for (int i = 0; i < shapes.size(); i++) {
-            if (shapes.get(i).isActive(x, y)) {
-                groupShapes.add(shapes.get(i));
-                shapes.remove(i);
+        for (Shape shape : shapes) {
+            if (shape.isActive(x, y)) {
+                groupShapes.add(shape);
+                shapes.remove(shape);
                 break;
             }
         }
@@ -176,11 +163,7 @@ public class Board {
     public void cloneShape() {
         for (Shape shape : shapes) {
             if (shape.isActive(x, y)) {
-                if (shape instanceof CombinedShape) {
-                    shapes.add(((CombinedShape) shape).cloneCombinedShape());
-                } else {
-                    shapes.add(shape.clone());
-                }
+                shapes.add(shape.clone());
                 break;
             }
         }

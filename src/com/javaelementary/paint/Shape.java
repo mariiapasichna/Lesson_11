@@ -30,4 +30,10 @@ public interface Shape extends Cloneable {
     MyColor getColor();
 
     Shape clone();
+
+    void setSize(double size);
+
+//    double getXCenter();
+//
+//    double getYCenter();
 }

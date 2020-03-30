@@ -4,13 +4,11 @@ import com.javaelementary.Const;
 import com.javaelementary.paint.Direction;
 import com.javaelementary.paint.MyColor;
 import com.javaelementary.paint.Shape;
-import com.javaelementary.paint.ShapeType;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CombinedShape implements Shape{
-    ShapeType shapeType = ShapeType.COMBINED;
+public class CombinedShape implements Shape {
     private List<Shape> groupShapes;
 
     public CombinedShape(List<Shape> groupShapes) {
@@ -21,6 +19,7 @@ public class CombinedShape implements Shape{
         return groupShapes;
     }
 
+    @Override
     public boolean isActive(double x, double y) {
         for (Shape shape : groupShapes) {
             if (x >= shape.getX() && x <= shape.getX() + Const.SHAPE_SIZE && y >= shape.getY() && y <= shape.getY() + Const.SHAPE_SIZE) {
@@ -41,6 +40,9 @@ public class CombinedShape implements Shape{
 
     @Override
     public boolean getFill() {
+        for (Shape shape : groupShapes) {
+            return shape.getFill();
+        }
         return false;
     }
 
@@ -55,54 +57,61 @@ public class CombinedShape implements Shape{
 
     @Override
     public Shape clone() {
-        return null;
+        List<Shape> cloneShapes = new ArrayList<>();
+        for (Shape shape : groupShapes) {
+            cloneShapes.add(shape.clone());
+        }
+        return new CombinedShape(cloneShapes);
     }
 
-    public void drawCombined() {
+    @Override
+    public void setSize(double size) {
+    }
+
+    @Override
+    public void drawStroke() {
         for (Shape shape : groupShapes) {
             if (shape.isFill()) {
                 shape.drawFill();
             } else {
                 shape.drawStroke();
             }
-            if (shape instanceof CombinedShape){
-                ((CombinedShape) shape).drawCombined();
+        }
+    }
+
+    @Override
+    public void drawFill() {
+        for (Shape shape : groupShapes) {
+            if (shape.isFill()) {
+                shape.drawFill();
+            } else {
+                shape.drawStroke();
             }
         }
     }
 
     @Override
-    public void drawStroke() {
-    }
-
-    @Override
-    public void drawFill() {
-    }
-
     public void drawActive() {
         for (Shape shape : groupShapes) {
             shape.drawActive();
         }
     }
 
-    public void fill() {
-        for (Shape shape : groupShapes) {
-            shape.setFill(true);
-        }
-    }
-
+    @Override
     public void move(Direction direction) {
         for (Shape shape : groupShapes) {
             shape.move(direction);
         }
     }
 
+    @Override
     public void grow() {
         for (Shape shape : groupShapes) {
             shape.grow();
         }
     }
 
+    @Override
     public void shrink() {
         for (Shape shape : groupShapes) {
             shape.shrink();
@@ -111,19 +120,17 @@ public class CombinedShape implements Shape{
 
     @Override
     public double getX() {
+        for (Shape shape : groupShapes) {
+            return shape.getX();
+        }
         return 0;
     }
 
     @Override
     public double getY() {
-        return 0;
-    }
-
-    public CombinedShape cloneCombinedShape() {
-        List<Shape> cloneShapes = new ArrayList<>();
         for (Shape shape : groupShapes) {
-            cloneShapes.add(shape.clone());
+            return shape.getY();
         }
-        return new CombinedShape(cloneShapes);
+        return 0;
     }
 }
