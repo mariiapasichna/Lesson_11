@@ -50,7 +50,7 @@ public class ShapeSave {
             result.y = baseShape.getY();
             result.size = baseShape.getSize();
             result.color = baseShape.getColor();
-            result.fill = baseShape.getFill();
+            result.fill = baseShape.isFill();
         }
         if (shape instanceof Circle) {
             result.shapeType = ShapeType.CIRCLE;

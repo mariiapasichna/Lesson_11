@@ -40,11 +40,6 @@ public abstract class BaseShape implements Shape {
     }
 
     @Override
-    public boolean getFill() {
-        return this.fill;
-    }
-
-    @Override
     public boolean isFill() {
         return fill;
     }
@@ -54,17 +49,14 @@ public abstract class BaseShape implements Shape {
         this.color = color;
     }
 
-    @Override
     public MyColor getColor() {
         return this.color;
     }
 
-    @Override
     public double getX() {
         return x;
     }
 
-    @Override
     public double getY() {
         return y;
     }

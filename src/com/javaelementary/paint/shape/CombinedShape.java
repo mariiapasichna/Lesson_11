@@ -1,6 +1,5 @@
 package com.javaelementary.paint.shape;
 
-import com.javaelementary.Const;
 import com.javaelementary.paint.Direction;
 import com.javaelementary.paint.MyColor;
 import com.javaelementary.paint.Shape;
@@ -22,7 +21,7 @@ public class CombinedShape implements Shape {
     @Override
     public boolean isActive(double x, double y) {
         for (Shape shape : groupShapes) {
-            if (x >= shape.getX() && x <= shape.getX() + Const.SHAPE_SIZE && y >= shape.getY() && y <= shape.getY() + Const.SHAPE_SIZE) {
+            if (shape.isActive(x,y)){
                 return true;
             }
         }
@@ -39,20 +38,7 @@ public class CombinedShape implements Shape {
     }
 
     @Override
-    public boolean getFill() {
-        for (Shape shape : groupShapes) {
-            return shape.getFill();
-        }
-        return false;
-    }
-
-    @Override
     public void setColor(MyColor color) {
-    }
-
-    @Override
-    public MyColor getColor() {
-        return null;
     }
 
     @Override
@@ -116,21 +102,5 @@ public class CombinedShape implements Shape {
         for (Shape shape : groupShapes) {
             shape.shrink();
         }
-    }
-
-    @Override
-    public double getX() {
-        for (Shape shape : groupShapes) {
-            return shape.getX();
-        }
-        return 0;
-    }
-
-    @Override
-    public double getY() {
-        for (Shape shape : groupShapes) {
-            return shape.getY();
-        }
-        return 0;
     }
 }

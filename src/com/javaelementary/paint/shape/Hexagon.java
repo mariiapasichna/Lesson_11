@@ -2,9 +2,8 @@ package com.javaelementary.paint.shape;
 
 import com.javaelementary.paint.Board;
 import com.javaelementary.paint.DisplayDriver;
-import com.javaelementary.paint.Shape;
 
-public class Hexagon extends BaseShape implements Shape {
+public class Hexagon extends BaseShape {
     public Hexagon(double x, double y, DisplayDriver displayDriver, Board board) {
         super(x, y, displayDriver, board);
     }

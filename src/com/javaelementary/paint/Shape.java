@@ -11,11 +11,9 @@ public interface Shape extends Cloneable {
 
     void shrink();
 
-    double getX();
-
-    double getY();
-
     void move(Direction direction);
+
+    Shape clone();
 
     boolean isActive(double x, double y);
 
@@ -23,17 +21,7 @@ public interface Shape extends Cloneable {
 
     void setFill(boolean fill);
 
-    boolean getFill();
-
     void setColor(MyColor color);
 
-    MyColor getColor();
-
-    Shape clone();
-
     void setSize(double size);
-
-//    double getXCenter();
-//
-//    double getYCenter();
 }
