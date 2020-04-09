@@ -9,4 +9,6 @@ public class Const {
     public static final Color ACTIVITY_COLOR = Color.WHITE;
     public static final int SHAPE_SIZE = 80;
     public static final int LINE_WIDTH = 5;
+    public static final String PATH = "/Users/user/save/save.txt";
+    public static final String FILE_NAME = "save.txt";
 }

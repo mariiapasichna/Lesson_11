@@ -100,10 +100,10 @@ public class Main extends Application {
                 board.cloneShape();
                 break;
             case F8:
-                save();
+                save(Const.FILE_NAME);
                 break;
             case F9:
-                download();
+                download(Const.FILE_NAME);
                 break;
             case ESCAPE:
                 board.clear();
@@ -127,8 +127,8 @@ public class Main extends Application {
         gc.fillText("move: UP, DOWN, LEFT, RIGHT", 600, 30);
     }
 
-    private void save() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("Save.txt"))) {
+    private void save(String fileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             Gson gson = new GsonBuilder().create();
             writer.write(gson.toJson(board.makeBoardSave()));
         } catch (IOException e) {
@@ -136,8 +136,8 @@ public class Main extends Application {
         }
     }
 
-    private void download() {
-        try (BufferedReader br = new BufferedReader(new FileReader("Save.txt"))) {
+    private void download(String fileName) {
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String download;
             while ((download = br.readLine()) != null) {
                 Gson gson = new GsonBuilder().create();
