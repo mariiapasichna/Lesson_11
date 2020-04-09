@@ -1,0 +1,1 @@
+{"x":53.0,"y":50.0,"shapes":[{"x":10.0,"y":10.0,"size":80.0,"color":"ORANGE","shapeType":"CIRCLE","fill":true}]}

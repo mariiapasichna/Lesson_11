@@ -23,6 +23,7 @@ public class Main extends Application {
     private GraphicsContext gc;
     private Board board;
     private Direction direction;
+    public static int saveCount=0;
 
     public static void main(String[] args) {
         launch(args);
@@ -65,18 +66,26 @@ public class Main extends Application {
             case UP:
                 direction = Direction.UP;
                 board.move(direction);
+                save(Const.PATH+saveCount);
+                saveCount++;
                 break;
             case DOWN:
                 direction = Direction.DOWN;
                 board.move(direction);
+                save(Const.PATH+saveCount);
+                saveCount++;
                 break;
             case RIGHT:
                 direction = Direction.RIGHT;
                 board.move(direction);
+                save(Const.PATH+saveCount);
+                saveCount++;
                 break;
             case LEFT:
                 direction = Direction.LEFT;
                 board.move(direction);
+                save(Const.PATH+saveCount);
+                saveCount++;
                 break;
             case F1:
                 board.fill();
@@ -104,6 +113,12 @@ public class Main extends Application {
                 break;
             case F9:
                 download(Const.FILE_NAME);
+                break;
+            case F10:
+                for (int i = saveCount; i >=0 ; i--) {
+                    download(Const.PATH+saveCount);
+                }
+                saveCount=0;
                 break;
             case ESCAPE:
                 board.clear();
